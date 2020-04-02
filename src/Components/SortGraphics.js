@@ -38,7 +38,7 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
   },
 }));
 
-function SortGraphics({ numElems, scramble }) {
+function SortGraphics({ numElems, scramble, speed }) {
   const classes = useStyles({ numElems });
   const parentRef = useRef(null);
   const [rows, set] = useState(genArr(numElems));
@@ -61,9 +61,8 @@ function SortGraphics({ numElems, scramble }) {
     window.addEventListener('resize', updateWidthAndHeight);
     return () => window.removeEventListener('resize', updateWidthAndHeight);
   });
-
   useEffect(() => {
-    set(shuffle);
+    set([...shuffle(rows)]);
   }, [scramble]);
 
   //   grab the dimensions of the parent element of the sorting elems
@@ -92,7 +91,7 @@ function SortGraphics({ numElems, scramble }) {
 
   const handleStartSort = () => {
     // setButtonState(!buttonState);
-    bubble(rows, set);
+    bubble(rows, set, speed);
   };
   // const lastX = transitions[1].props.x.lastPosition;
   // console.log(lastX);

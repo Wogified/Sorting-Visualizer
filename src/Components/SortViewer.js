@@ -7,6 +7,8 @@ import {
   Slider,
   useMediaQuery,
   useTheme,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import SortGraphics from './SortGraphics';
 
@@ -47,6 +49,7 @@ const useStyles = makeStyles(({ breakpoints }) => ({
     alignItems: 'center',
     flexDirection: 'column',
     paddingTop: 5,
+    paddingBottom: 10,
   },
   slider: {
     [breakpoints.up('sm')]: {
@@ -73,19 +76,24 @@ const marks = [
   },
 ];
 
-function valuetext(value) {
-  return `${value}°C`;
-}
-
 function SortViewer() {
   const classes = useStyles();
   const [sliderState, setSlider] = useState(5);
+  const [speed, setSpeed] = useState(300);
   const [scramble, setScramble] = useState(false);
-
   const theme = useTheme();
   // checks for screens that are mobile sized and below
   const mobile = useMediaQuery(theme.breakpoints.down('xs'));
-  //   console.log(buttonState);
+
+  const handleSpeedChange = (event) => {
+    console.log(event);
+    setSpeed(event.target.value);
+  };
+
+  const handleElemsChange = (event, newValue) => {
+    setSlider(newValue);
+  };
+
   return (
     <Fragment>
       <Typography className={classes.title} variant="h1">
@@ -102,22 +110,32 @@ function SortViewer() {
           <Slider
             className={classes.slider}
             value={sliderState}
-            getAriaValueText={valuetext}
             aria-labelledby="discrete-slider-custom"
             step={1}
             valueLabelDisplay="auto"
             marks={mobile ? marks.slice(0, 2) : marks}
             min={marks[0].value}
             max={mobile ? 20 : 50}
-            onChange={(event, newValue) => setSlider(newValue)}
+            onChange={handleElemsChange}
           />
         </Grid>
         <Grid item xs={12} sm={4} className={classes.itemContainer}>
-          <Button>Speed</Button>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={speed}
+            onChange={handleSpeedChange}
+          >
+            <MenuItem value={1000}>Slow</MenuItem>
+            <MenuItem value={600}>Slowish</MenuItem>
+            <MenuItem value={300}>Medium</MenuItem>
+            <MenuItem value={150}>Fastish</MenuItem>
+            <MenuItem value={50}>Fast</MenuItem>
+          </Select>
         </Grid>
 
         <Grid item xs={12} sm={12} className={classes.sortGraphicsContainer}>
-          <SortGraphics numElems={sliderState} scramble={scramble} />
+          <SortGraphics numElems={sliderState} scramble={scramble} speed={speed} />
         </Grid>
       </Grid>
     </Fragment>

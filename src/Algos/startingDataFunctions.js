@@ -43,7 +43,7 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
-function bubble(arr, setState) {
+function bubble(arr, setState, speed) {
   let count = 0;
   let swapCount = 0;
   let temp = [...arr];
@@ -59,7 +59,7 @@ function bubble(arr, setState) {
         setTimeout(() => {
           const newArr = [...swap(arr, j, j + 1)];
           setState(newArr);
-        }, 250 * swapCount);
+        }, speed * swapCount);
         swapCount += 1;
       }
 
