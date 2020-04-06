@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
-import { useTransition, animated as a } from 'react-spring';
-import { Button, makeStyles } from '@material-ui/core';
+import { useTransition, animated as a, config } from 'react-spring';
+import { Button, makeStyles, useTheme } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { genArr, swap, shuffle, bubble } from '../Algos/startingDataFunctions';
+import { genArr, AnimateSort, stopAnimation, bubbleSort, insertionSort } from '../Algos';
 
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
   sortElemContainer: {
@@ -17,8 +17,6 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
     borderTopRightRadius: '5px',
     height: '100%',
     width: '100%',
-    // width: ({ numElems }) => `calc(100%/${Math.floor(numElems * 1.5)})`,
-    // width: ({ numElems }) => `calc(80% + (${numElems}-5)/45*20%)`,
     '&:hover': {
       backgroundColor: palette.secondary.main,
     },
@@ -38,13 +36,14 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
   },
 }));
 
-function SortGraphics({ numElems, scramble, speed }) {
+function SortGraphics({ numElems, scramble, speed, algo }) {
   const classes = useStyles({ numElems });
   const parentRef = useRef(null);
-  const [rows, set] = useState(genArr(numElems));
+  const theme = useTheme();
+  const [rows, set] = useState(genArr(numElems, theme));
+  const [animationTimeouts, setAnimationTimeouts] = useState([]);
   const [containerDim, setContainerDim] = useState([0, 0]);
   const [contWidth, contHeight] = containerDim;
-  // const [buttonState, setButtonState] = useState(false);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
   const width = contWidth / numElems;
@@ -62,22 +61,22 @@ function SortGraphics({ numElems, scramble, speed }) {
     return () => window.removeEventListener('resize', updateWidthAndHeight);
   });
   useEffect(() => {
-    set([...shuffle(rows)]);
-  }, [scramble]);
+    stopAnimation(animationTimeouts);
+    set(genArr(numElems, theme));
+  }, [scramble, algo]);
 
   //   grab the dimensions of the parent element of the sorting elems
   useEffect(() => {
-    // if (parentRef.current) {
     const parentHeight = parentRef.current.offsetHeight;
     const parentWidth = parentRef.current.offsetWidth;
     setContainerDim([parentWidth, parentHeight]);
-    // }
   }, [parentRef, windowWidth]);
 
   const items = rows.map((child, i) => {
     const height = (child.value / numElems) * contHeight;
+    const background = child.color;
     const x = width * i;
-    return { ...child, x, width, height };
+    return { ...child, x, width, height, background };
   });
 
   const transitions = useTransition(items, (item) => item.key, {
@@ -86,12 +85,24 @@ function SortGraphics({ numElems, scramble, speed }) {
     update: ({ x, width, height }) => ({ x, width, height }),
     leave: { height: 0, opacity: 0 },
     config: { mass: 1, tension: 200, friction: 20 },
-    // trail: 25,
   });
 
   const handleStartSort = () => {
-    // setButtonState(!buttonState);
-    bubble(rows, set, speed);
+    stopAnimation(animationTimeouts);
+    let animations;
+    switch (algo) {
+      case 'Bubble':
+        animations = bubbleSort(rows);
+        break;
+      case 'Insertion':
+        animations = insertionSort(rows);
+        break;
+      default:
+        animations = bubbleSort(rows);
+        break;
+    }
+    const timeouts = AnimateSort(rows, animations, set, speed);
+    setAnimationTimeouts(timeouts);
   };
   // const lastX = transitions[1].props.x.lastPosition;
   // console.log(lastX);
@@ -102,11 +113,10 @@ function SortGraphics({ numElems, scramble, speed }) {
         key={key}
         style={{
           transform: x.interpolate((x) => `translate3d(${x}px,0,0)`),
-          //   height: `calc((${item.value}/${numElems})*100%)`,
           ...rest,
         }}
       >
-        <div className={classes.sortElem} />
+        <a.div className={classes.sortElem} style={{ backgroundColor: item.color }} />
       </a.div>
     ));
   }

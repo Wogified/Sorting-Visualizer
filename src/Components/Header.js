@@ -9,11 +9,16 @@ import {
   Switch,
   IconButton,
   Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 // import InboxIcon from '@material-ui/icons/MoveToInbox';
 // import MailIcon from '@material-ui/icons/Mail';
 import { withContext } from '../context';
+import { sortAlgos } from '../Algos';
 
 const useStyles = makeStyles({
   header: {
@@ -25,14 +30,15 @@ const useStyles = makeStyles({
   },
 });
 
-function Header({ onThemeToggle, darkMode }) {
+function Header({ onThemeToggle, onAlgoSelect }) {
   const classes = useStyles();
   const [state, setState] = useState({
     checkedA: true,
     checkedB: true,
   });
-  const [drawerState, setDrawerState] = React.useState(false);
+  const [drawerState, setDrawerState] = useState(false);
 
+  const sortAlgos = ['Bubble', 'Insertion', 'Merge', 'Quick'];
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -52,7 +58,14 @@ function Header({ onThemeToggle, darkMode }) {
         </IconButton>
         {/* there is a warning that will pop up when using drawing about findDOMnode */}
         <Drawer anchor="left" open={drawerState} onClose={toggleDrawer(false)}>
-          hello
+          <List>
+            {sortAlgos.map((text, index) => (
+              <ListItem button key={text} onClick={() => onAlgoSelect(text)}>
+                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
         </Drawer>
         <Typography variant="h4" color="inherit" className={classes.header}>
           Sort Viz

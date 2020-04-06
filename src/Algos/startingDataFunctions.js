@@ -1,15 +1,32 @@
+import { deepOrange, cyan, red, green } from '@material-ui/core/colors';
+
+const myColors = {
+  myOrange: deepOrange[500],
+  myBlue: cyan[400],
+  myGreen: green[200],
+  myRed: red[200],
+};
+
+class Node {
+  constructor(val) {
+    this.value = val;
+    this.key = `${val}`;
+    this.color = myColors.myOrange;
+  }
+}
+
 function genArr(n) {
   const x = [];
   for (let i = 1; i <= n; i += 1) {
-    x.push({ value: i, key: `hello${i}` });
+    x.push(new Node(i));
   }
   return shuffle(x);
-  //   return x;
 }
 
 function shuffle(array) {
   let currentIndex = array.length;
-  let temporaryValue, randomIndex;
+  let temporaryValue;
+  let randomIndex;
 
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
@@ -26,78 +43,72 @@ function shuffle(array) {
   return array;
 }
 
-function swap(array, i, j) {
-  // console.log(array[0].value, i, j);
-  console.log('hi');
+function swapArr(array, i, j) {
   let temp = array[i];
   array[i] = array[j];
   array[j] = temp;
   return array;
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
+function arrAnimate(arr, animation, setState, sortSpeed) {
+  const { ind1, ind2, swap, compare } = animation;
+  const { myBlue, myOrange, myGreen, myRed } = myColors;
+  let newArr = [];
+
+  if (swap) newArr = [...swapArr(arr, ind1, ind2)];
+  else newArr = [...arr];
+  for (let i = 0; i < newArr.length; i += 1) {
+    let temp1 = ind1;
+    let temp2 = ind2;
+    if (swap) {
+      temp1 = ind2;
+      temp2 = ind1;
+    }
+    if (i === temp1) newArr[i].color = myBlue;
+    else if (i === temp2 && sortSpeed >= 100) {
+      // newArr[i].color = color;
+      if (compare) newArr[i].color = myGreen;
+      else newArr[i].color = myRed;
+    } else newArr[i].color = myOrange;
+  }
+
+  setState(newArr);
 }
 
-function bubble(arr, setState, speed) {
-  let count = 0;
-  let swapCount = 0;
-  let temp = [...arr];
-
-  // for loop to interate through the length of the array
-  for (let i = 0; i < arr.length; i += 1) {
-    //  nested for loop to check each element in the array against the rest of the array
-    for (let j = 0; j < arr.length - 1 - i; j += 1) {
-      // if the array elem at the current position is greater
-      // than the value at the next elem, then swap
-      if (temp[j].value > temp[j + 1].value) {
-        swap(temp, j, j + 1);
-        setTimeout(() => {
-          const newArr = [...swap(arr, j, j + 1)];
-          setState(newArr);
-        }, speed * swapCount);
-        swapCount += 1;
-      }
-
-      count += 1;
+function AnimateSort(source, animations, setState, sortSpeed) {
+  const n = animations.length;
+  let delay = 200;
+  const speedRef = [600, 300, 150, 50, 15];
+  const speed = speedRef[sortSpeed];
+  // loop through all recorded iterations
+  const timeouts = [];
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j < animations[i].length; j += 1) {
+      let speedMod = 0;
+      if (j === 0) speedMod = speed;
+      timeouts.push(setTimeout(arrAnimate, delay, source, animations[i][j], setState, speed));
+      delay = delay + speed + speedMod;
     }
   }
-  return arr;
-}
-
-function pivot(arr, start = 0, end = arr.length + 1) {
-  // create a variable to store the pivot value
-  let pivot = arr[start];
-  //  count of elems smaller than pivot
-  let compInd = start;
-  // for loop to go through the array to check the pivot against all elements
-  for (let i = start + 1; i < arr.length; i++) {
-    // if the current value at index is less than the value of the pivot
-    // then add to the pivot index compInder and swap the value to
-    // start accumulating in front of the pivot
-    if (pivot > arr[i]) {
-      compInd++;
-      swap(arr, compInd, i);
-    }
+  // add animation to turn all elems green after sorting is complete
+  for (let i = 0; i < source.length; i += 1) {
+    timeouts.push(
+      setTimeout(() => {
+        const newArr = [...source];
+        newArr[i].color = myColors.myGreen;
+        setState(newArr);
+      }, delay)
+    );
+    delay += 50;
   }
-  swap(arr, start, compInd);
-  return compInd;
+
+  return timeouts;
 }
 
-function quickSort(arr, left = 0, right = arr.length - 1) {
-  //   console.log(arr);
-  console.log(left, right);
-
-  if (left < right) {
-    let piv = pivot(arr, left, right);
-    quickSort(arr, left, piv - 1);
-    quickSort(arr, piv + 1, right);
+function stopAnimation(timeouts) {
+  for (let i = 0; i < timeouts.length; i += 1) {
+    clearTimeout(timeouts[i]);
   }
-  return arr;
 }
 
-export { genArr, shuffle, swap, bubble };
+export { genArr, shuffle, AnimateSort, stopAnimation, swapArr, myColors };
