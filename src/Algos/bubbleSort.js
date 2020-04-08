@@ -1,4 +1,5 @@
 import { swapArr } from './startingDataFunctions';
+import { AnimationStep } from './animations';
 
 function bubbleSort(arr) {
   const temp = [...arr];
@@ -14,27 +15,21 @@ function bubbleSort(arr) {
       // if the array elem at the current position is greater
       // than the value at the next elem, then swap
       const tempStore = [];
-      const iterDetail = {
-        ind1: j,
-        ind2: j + 1,
-        swap: false,
-        compare: false,
-      };
+      const animateStep = new AnimationStep(j, j + 1);
 
       if (temp[j].value > temp[j + 1].value) {
-        iterDetail.compare = true;
-        tempStore.push({ ...iterDetail });
+        animateStep.compare = true;
+        tempStore.push({ ...animateStep });
 
         swapArr(temp, j, j + 1);
 
         swapped = true;
-        iterDetail.swap = true;
-        tempStore.push({ ...iterDetail });
+        animateStep.swap = true;
+        tempStore.push({ ...animateStep });
       } else {
-        iterDetail.compare = false;
-        tempStore.push({ ...iterDetail });
-        iterDetail.compare = false;
-        tempStore.push({ ...iterDetail });
+        animateStep.compare = false;
+        animateStep.delayMult = 2;
+        tempStore.push({ ...animateStep });
       }
 
       output.push(tempStore);
@@ -47,4 +42,4 @@ function bubbleSort(arr) {
   return output;
 }
 
-export { bubbleSort };
+export default bubbleSort;
