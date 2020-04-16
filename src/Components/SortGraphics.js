@@ -2,7 +2,15 @@ import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { useTransition, animated as a, config } from 'react-spring';
 import { Button, makeStyles, useTheme } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { genArr, AnimateSort, stopAnimation, bubbleSort, insertionSort } from '../Algos';
+import {
+  genArr,
+  AnimateSort,
+  stopAnimation,
+  AnimateRecursiveSort,
+  bubbleSort,
+  insertionSort,
+  mergeSort,
+} from '../Algos';
 
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
   sortElemContainer: {
@@ -73,6 +81,7 @@ function SortGraphics({ numElems, scramble, speed, algo }) {
   }, [parentRef, windowWidth]);
 
   const items = rows.map((child, i) => {
+    // console.log(child, i);
     const height = (child.value / numElems) * contHeight;
     const background = child.color;
     const x = width * i;
@@ -90,18 +99,26 @@ function SortGraphics({ numElems, scramble, speed, algo }) {
   const handleStartSort = () => {
     stopAnimation(animationTimeouts);
     let animations;
+    let timeouts;
     switch (algo) {
       case 'Bubble':
         animations = bubbleSort(rows);
+        timeouts = AnimateSort(rows, animations, set, speed);
         break;
       case 'Insertion':
         animations = insertionSort(rows);
+        timeouts = AnimateSort(rows, animations, set, speed);
+        break;
+      case 'Merge':
+        animations = mergeSort(rows);
+        // console.log(animations);
+        timeouts = AnimateRecursiveSort(rows, animations, set, speed);
         break;
       default:
         animations = bubbleSort(rows);
         break;
     }
-    const timeouts = AnimateSort(rows, animations, set, speed);
+    // console.log(animations);
     setAnimationTimeouts(timeouts);
   };
   // const lastX = transitions[1].props.x.lastPosition;

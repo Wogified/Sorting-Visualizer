@@ -1,10 +1,12 @@
-import { deepOrange, cyan, red, green } from '@material-ui/core/colors';
+import { deepOrange, cyan, red, green, purple, teal } from '@material-ui/core/colors';
 
 const myColors = {
   myOrange: deepOrange[500],
   myBlue: cyan[400],
   myGreen: green[200],
   myRed: red[200],
+  myPurple: purple[500],
+  myTeal: teal[500],
 };
 
 class Node {

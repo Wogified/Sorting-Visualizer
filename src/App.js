@@ -6,7 +6,7 @@ import { Header, SortViewer } from './Components';
 
 function App() {
   const [darkMode, setDarkMode] = useState('dark');
-  const [algo, setAlgo] = useState('Bubble');
+  const [algo, setAlgo] = useState('Merge');
   const initTheme = {
     palette: {
       primary: deepOrange,
