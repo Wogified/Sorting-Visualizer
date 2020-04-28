@@ -1,56 +1,16 @@
-import _ from 'lodash';
-import { AnimationStep } from './animations';
+import { cloneDeep } from 'lodash';
 import { myColors } from './startingDataFunctions';
+import { RecurAniStep, setArrColor } from './animations';
 
-function setArrColor(arr, color) {
-  // console.log(arr);
-  if (arr.length) {
-    for (let i = 0; i < arr.length; i += 1) {
-      if (arr[i]) arr[i].color = color;
-    }
-  }
-  // return [...arr];
-}
-
-class RecurAniStep {
-  constructor(array, arrStartLen, aLen, bLen) {
-    this.step = 0;
-    this.left = {
-      start: arrStartLen,
-      end: arrStartLen + aLen,
-    };
-    this.right = {
-      start: this.left.end,
-      end: this.left.end + bLen,
-    };
-    this.start = arrStartLen;
-    this.aLen = aLen;
-    this.bLen = bLen;
-    this.merge = null;
-    this.compare = 0;
-
-    this.delayMult = 1;
-    this.array = array;
-  }
-}
-function printArr(arr) {
-  let output = '[';
-  let n = arr.length;
-  for (let i = 0; i < arr.length; i += 1) {
-    output += `${arr[i].value}`;
-    if (i < arr.length - 1) output += ',';
-  }
-  output += ']';
-  console.log(output);
-  console.log('='.repeat(n * 2 + 2));
-}
-
-function mergeSort(arr) {
-  const output = [];
-  const temp = [...arr];
+function mergeSort(arr, speed) {
+  let output = [];
+  const temp = cloneDeep(arr);
   let prevArr = [...temp];
-  // const { myBlue, myGreen, myOrange, myRed, myTeal, myPurple } = myColors;
+  const { myBlue, myGreen, myOrange, myTeal, myPurple } = myColors;
   let count = 0;
+
+  const aStp = new RecurAniStep(arr);
+  output.push(cloneDeep(aStp));
 
   function mergeArr(a, b, start, end) {
     // console.log(start, end);
@@ -64,61 +24,73 @@ function mergeSort(arr) {
     let arrEnd = arrImage.slice(end);
     // highlight diff colors for current values of interest
 
+    // AniStep: Highlight target arrays to be sorted
+    arrStart = setArrColor(arrStart, myOrange);
+    if (speed < 3) arrMid = setArrColor(arrMid, myGreen);
+    else arrMid = setArrColor(arrMid, myOrange);
+    a = setArrColor(a, myTeal);
+    b = setArrColor(b, myPurple);
+    arrEnd = setArrColor(arrEnd, myOrange);
+    aStp.array = arrStart.concat(arrMid, a, b, arrEnd);
+    aStp.count();
+    aStp.level = 5;
+    aStp.delayMult = 2;
+    tempStore.push(cloneDeep(aStp));
+
     while (a.length || b.length) {
       let smallest;
-      let mergeDir;
-      // AniStep: Highlight target arrays to be sorted
-      const arrTracker = [...arrStart.concat(arrMid, a, b, arrEnd)];
-      const aStp = new RecurAniStep(arrTracker, arrStart.concat(arrMid).length, a.length, b.length);
+      let change = false;
+      if (speed < 3) {
+        arrMid = setArrColor(arrMid, myGreen);
+        if (a.length) a[0].color = myBlue;
+        if (b.length) b[0].color = myBlue;
+        aStp.array = arrStart.concat(arrMid, a, b, arrEnd);
+        aStp.level = 3;
+        aStp.delayMult = 1;
+        aStp.count();
+        tempStore.push(cloneDeep(aStp));
+      }
 
-      tempStore.push({ ...aStp });
-      // Highligh two elements of focus
-      aStp.step += 1;
-      aStp.delayMult = 2;
-      tempStore.push({ ...aStp });
-
-      aStp.step += 1;
-      aStp.delayMult = 1;
       if (a.length && !b.length) {
-        mergeDir = 'left';
-        aStp.merge = mergeDir;
-        tempStore.push({ ...aStp });
-
         smallest = a.shift();
       } else if (!a.length && b.length) {
-        mergeDir = 'right';
-        aStp.merge = mergeDir;
-        tempStore.push({ ...aStp });
-
         smallest = b.shift();
       } else if (a[0].value < b[0].value) {
-        mergeDir = 'left';
-        aStp.merge = mergeDir;
-        tempStore.push({ ...aStp });
-
+        // change = true;
         smallest = a.shift();
       } else {
-        mergeDir = 'right';
-        aStp.merge = mergeDir;
-        tempStore.push({ ...aStp });
-
+        change = true;
         smallest = b.shift();
       }
 
       arrMid.push(smallest);
       // aStp.delayMult = 1;
-      aStp.swap = true;
-      aStp.array = [...arrStart.concat(arrMid, a, b, arrEnd)];
-      aStp.aLen = a.length;
-      aStp.bLen = b.length;
-      aStp.start = arrStart.concat(arrMid).length;
-      aStp.step += 1;
-      tempStore.push({ ...aStp });
+
+      if (change) {
+        aStp.array = arrStart.concat(arrMid, a, b, arrEnd);
+        aStp.level = 5;
+        aStp.delayMult = 2;
+        aStp.count();
+        tempStore.push(cloneDeep(aStp));
+      }
+
+      count = aStp.index + 1;
     }
-    output.push(tempStore);
+    output = output.concat(tempStore);
+    // set final sorted portion of the array to be green
+
+    if (speed < 3) {
+      arrMid = setArrColor(arrMid, myGreen);
+      aStp.array = arrStart.concat(arrMid, arrEnd);
+      aStp.level = 5;
+
+      aStp.count();
+      output.push(cloneDeep(aStp));
+    }
+
     const arrTemp = arrStart.concat(arrMid, arrEnd);
     prevArr = arrTemp;
-    count += 1;
+
     return arrMid;
   }
 
@@ -141,7 +113,6 @@ function mergeSort(arr) {
     // console.log("ahhh", Ln, finalEnd);
     // console.log(start, end, n);
     return mergeArr(left, right, Ln, finalEnd);
-    // return mergeArr(mergeSort(arr.slice(0, n)), mergeSort(arr.slice(n)));
   }
   let n = temp.length;
   const result = helper(temp, 0, n);

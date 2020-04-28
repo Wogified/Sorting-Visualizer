@@ -1,8 +1,8 @@
 import bubbleSort from './bubbleSort';
 import insertionSort from './insertionSort';
 import mergeSort from './mergeSort';
-import { genArr, shuffle } from './startingDataFunctions';
-import { AnimateSort, stopAnimation, AnimateRecursiveSort } from './animations';
+import { genArr, shuffle, resetArrColors } from './startingDataFunctions';
+import { stopAnimation, genericArrAnimate } from './animations';
 
 export {
   insertionSort,
@@ -10,7 +10,7 @@ export {
   mergeSort,
   genArr,
   shuffle,
-  AnimateSort,
+  resetArrColors,
   stopAnimation,
-  AnimateRecursiveSort,
+  genericArrAnimate,
 };

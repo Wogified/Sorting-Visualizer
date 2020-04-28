@@ -4,12 +4,12 @@ import { Button, makeStyles, useTheme } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {
   genArr,
-  AnimateSort,
+  resetArrColors,
   stopAnimation,
-  AnimateRecursiveSort,
   bubbleSort,
   insertionSort,
   mergeSort,
+  genericArrAnimate,
 } from '../Algos';
 
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
@@ -44,22 +44,71 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
   },
 }));
 
-function SortGraphics({ numElems, scramble, speed, algo }) {
+function SortGraphics({
+  numElems,
+  scramble,
+  speed,
+  algo,
+  sortState,
+  desiredStep,
+  currStep,
+  setCurrStep,
+  setStepLimit,
+}) {
   const classes = useStyles({ numElems });
   const parentRef = useRef(null);
   const theme = useTheme();
-  const [rows, set] = useState(genArr(numElems, theme));
+  const [sortElems, setSortElems] = useState(genArr(numElems, theme));
   const [animationTimeouts, setAnimationTimeouts] = useState([]);
+  const [aniSteps, setAniSteps] = useState([]);
   const [containerDim, setContainerDim] = useState([0, 0]);
   const [contWidth, contHeight] = containerDim;
-  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const width = contWidth / numElems;
 
   useEffect(() => {
-    set(genArr(numElems));
+    setSortElems(genArr(numElems));
   }, [numElems]);
-  //   console.log(rows);
+
+  // define limit for steps
+  useEffect(() => {
+    setStepLimit(aniSteps.length);
+  }, [aniSteps]);
+
+  // pause Animation Effect
+  useEffect(() => {
+    if (sortState === 1) {
+      // console.log(sortState, 'play');
+      if (currStep === 0) handleStartSort();
+      else {
+        let timeouts = genericArrAnimate(
+          aniSteps.slice(currStep),
+          setSortElems,
+          setCurrStep,
+          speed
+        );
+        setAnimationTimeouts(timeouts);
+      }
+    } else if (sortState === 2) {
+      console.log(sortState, 'paused');
+      stopAnimation(animationTimeouts);
+    } else if (sortState === 0) {
+      console.log(sortState, 'stopped');
+      stopAnimation(animationTimeouts);
+      setSortElems([...resetArrColors(sortElems)]);
+    }
+  }, [sortState]);
+
+  useEffect(() => {
+    if (sortState === 2 && desiredStep < aniSteps.length) {
+      console.log(desiredStep, aniSteps[desiredStep].step);
+      // console.log('hi');
+      genericArrAnimate(aniSteps[desiredStep], setSortElems, setCurrStep, speed);
+    }
+  }, [desiredStep, currStep]);
+
+  //   console.log(sortElems);
 
   const updateWidthAndHeight = () => {
     setWindowWidth(window.innerWidth);
@@ -70,7 +119,7 @@ function SortGraphics({ numElems, scramble, speed, algo }) {
   });
   useEffect(() => {
     stopAnimation(animationTimeouts);
-    set(genArr(numElems, theme));
+    setSortElems(genArr(numElems, theme));
   }, [scramble, algo]);
 
   //   grab the dimensions of the parent element of the sorting elems
@@ -80,7 +129,7 @@ function SortGraphics({ numElems, scramble, speed, algo }) {
     setContainerDim([parentWidth, parentHeight]);
   }, [parentRef, windowWidth]);
 
-  const items = rows.map((child, i) => {
+  const items = sortElems.map((child, i) => {
     // console.log(child, i);
     const height = (child.value / numElems) * contHeight;
     const background = child.color;
@@ -96,28 +145,26 @@ function SortGraphics({ numElems, scramble, speed, algo }) {
     config: { mass: 1, tension: 200, friction: 20 },
   });
 
+  // Todo: implement bubble and insertion sorts with generic animation
   const handleStartSort = () => {
-    stopAnimation(animationTimeouts);
+    // stopAnimation(animationTimeouts);
     let animations;
-    let timeouts;
     switch (algo) {
       case 'Bubble':
-        animations = bubbleSort(rows);
-        timeouts = AnimateSort(rows, animations, set, speed);
+        animations = bubbleSort(sortElems);
         break;
       case 'Insertion':
-        animations = insertionSort(rows);
-        timeouts = AnimateSort(rows, animations, set, speed);
+        animations = insertionSort(sortElems);
         break;
       case 'Merge':
-        animations = mergeSort(rows);
-        // console.log(animations);
-        timeouts = AnimateRecursiveSort(rows, animations, set, speed);
+        animations = mergeSort(sortElems, speed);
         break;
       default:
-        animations = bubbleSort(rows);
+        animations = bubbleSort(sortElems);
         break;
     }
+    setAniSteps([...animations]);
+    const timeouts = genericArrAnimate(animations, setSortElems, setCurrStep, speed);
     // console.log(animations);
     setAnimationTimeouts(timeouts);
   };
@@ -140,8 +187,6 @@ function SortGraphics({ numElems, scramble, speed, algo }) {
 
   return (
     <Fragment>
-      <Button onClick={handleStartSort}>Start Sort!</Button>
-
       <div className={classes.sortContainer} ref={parentRef}>
         {renderDivs()}
       </div>

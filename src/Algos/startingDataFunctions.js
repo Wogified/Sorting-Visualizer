@@ -1,12 +1,12 @@
-import { deepOrange, cyan, red, green, purple, teal } from '@material-ui/core/colors';
+import { deepOrange, blue, red, green, purple, teal } from '@material-ui/core/colors';
 
 const myColors = {
   myOrange: deepOrange[500],
-  myBlue: cyan[400],
+  myBlue: blue[400],
   myGreen: green[200],
   myRed: red[200],
   myPurple: purple[500],
-  myTeal: teal[500],
+  myTeal: teal[700],
 };
 
 class Node {
@@ -23,6 +23,13 @@ function genArr(n) {
     x.push(new Node(i));
   }
   return shuffle(x);
+}
+
+function resetArrColors(arr) {
+  for (let i = 0; i < arr.length; i += 1) {
+    arr[i].color = myColors.myOrange;
+  }
+  return arr;
 }
 
 function shuffle(array) {
@@ -52,4 +59,4 @@ function swapArr(array, i, j) {
   return array;
 }
 
-export { genArr, shuffle, swapArr, myColors };
+export { genArr, shuffle, swapArr, myColors, resetArrColors };

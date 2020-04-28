@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import {
   Typography,
   Grid,
@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import SortGraphics from './SortGraphics';
+import SortStepper from './SortStepper';
 
 const useStyles = makeStyles(({ breakpoints }) => ({
   Paper: {
@@ -82,7 +83,13 @@ function SortViewer({ algo }) {
   const mobile = useMediaQuery(theme.breakpoints.down('xs'));
   const [sliderState, setSlider] = useState(10);
   const [speed, setSpeed] = useState(2);
+  const [stop, setStop] = useState(false);
+  const [play, setPlay] = useState(false);
+  const [sortState, setSortState] = useState(0);
   const [scramble, setScramble] = useState(false);
+  const [currStep, setCurrStep] = useState(0);
+  const [desiredStep, setDesiredStep] = useState(0);
+  const [stepLimit, setStepLimit] = useState(0);
 
   // checks for screens that are mobile sized and below
   const handleSpeedChange = (event) => {
@@ -91,6 +98,20 @@ function SortViewer({ algo }) {
 
   const handleElemsChange = (event, newValue) => {
     setSlider(newValue);
+  };
+
+  const handleScramble = () => {
+    setScramble(!scramble);
+    setStop(false);
+  };
+
+  const handleStopSort = () => {
+    setStop(false);
+    setPlay(false);
+    setSortState(0);
+    setCurrStep(0);
+    setDesiredStep(0);
+    setStepLimit(0);
   };
 
   return (
@@ -104,7 +125,9 @@ function SortViewer({ algo }) {
       </Typography>
       <Grid container>
         <Grid item xs={12} sm={4} className={classes.itemContainer}>
-          <Button onClick={() => setScramble(!scramble)}>Scramble</Button>
+          <Button onClick={handleScramble} disabled={sortState > 0}>
+            Scramble
+          </Button>
         </Grid>
         <Grid item xs={12} sm={4} className={classes.itemContainer}>
           <Slider
@@ -117,6 +140,7 @@ function SortViewer({ algo }) {
             min={marks[0].value}
             max={mobile ? 20 : 35}
             onChange={handleElemsChange}
+            disabled={sortState > 0}
           />
         </Grid>
         <Grid item xs={12} sm={4} className={classes.itemContainer}>
@@ -125,6 +149,7 @@ function SortViewer({ algo }) {
             id="demo-simple-select"
             value={speed}
             onChange={handleSpeedChange}
+            disabled={sortState > 0}
           >
             <MenuItem value={0}>Slow</MenuItem>
             <MenuItem value={1}>Slowish</MenuItem>
@@ -133,9 +158,37 @@ function SortViewer({ algo }) {
             <MenuItem value={4}>Fast</MenuItem>
           </Select>
         </Grid>
+        {/* <Grid item xs={12} sm={12} className={classes.itemContainer}>
+          <Button onClick={() => handleSortState(!sort)}>
+            {sort ? 'Stop Sort' : 'Start Sort'}
+          </Button>
+        </Grid> */}
+        <Grid item xs={12} sm={12} className={classes.itemContainer}>
+          <SortStepper
+            sortState={sortState}
+            onSetSortState={setSortState}
+            onStop={handleStopSort}
+            onSetDesiredStep={setDesiredStep}
+            stepLim={stepLimit}
+            currStep={currStep}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} className={classes.itemContainer}>
+          <Typography>Step: {currStep}</Typography>
+        </Grid>
 
         <Grid item xs={12} sm={12} className={classes.sortGraphicsContainer}>
-          <SortGraphics numElems={sliderState} scramble={scramble} speed={speed} algo={algo} />
+          <SortGraphics
+            sortState={sortState}
+            numElems={sliderState}
+            scramble={scramble}
+            speed={speed}
+            algo={algo}
+            desiredStep={desiredStep}
+            currStep={currStep}
+            setCurrStep={setCurrStep}
+            setStepLimit={setStepLimit}
+          />
         </Grid>
       </Grid>
     </Fragment>
