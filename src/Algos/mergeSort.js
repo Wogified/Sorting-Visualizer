@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { myColors } from './startingDataFunctions';
-import { RecurAniStep, setArrColor } from './animations';
+import { AniStep, setArrColor } from './animations';
 
 function mergeSort(arr, speed) {
   let output = [];
@@ -9,7 +9,7 @@ function mergeSort(arr, speed) {
   const { myBlue, myGreen, myOrange, myTeal, myPurple } = myColors;
   let count = 0;
 
-  const aStp = new RecurAniStep(arr);
+  const aStp = new AniStep(arr);
   output.push(cloneDeep(aStp));
 
   function mergeArr(a, b, start, end) {

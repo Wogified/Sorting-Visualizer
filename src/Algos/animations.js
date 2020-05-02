@@ -1,6 +1,6 @@
 import { myColors, swapArr } from './startingDataFunctions';
 
-class RecurAniStep {
+class AniStep {
   constructor(array) {
     this.step = 0;
     this.array = array;
@@ -115,7 +115,7 @@ function stopAnimation(timeouts) {
   }
 }
 
-export { stopAnimation, RecurAniStep, genericArrAnimate, setArrColor };
+export { stopAnimation, AniStep, genericArrAnimate, setArrColor };
 
 // class AnimationStep {
 //   constructor(index1, index2) {

@@ -151,10 +151,10 @@ function SortGraphics({
     let animations;
     switch (algo) {
       case 'Bubble':
-        animations = bubbleSort(sortElems);
+        animations = bubbleSort(sortElems, speed);
         break;
       case 'Insertion':
-        animations = insertionSort(sortElems);
+        animations = insertionSort(sortElems, speed);
         break;
       case 'Merge':
         animations = mergeSort(sortElems, speed);

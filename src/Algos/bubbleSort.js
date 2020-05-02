@@ -1,15 +1,15 @@
 import { cloneDeep } from 'lodash';
 import { swapArr, myColors } from './startingDataFunctions';
-import { RecurAniStep, setArrColor } from './animations';
+import { AniStep, setArrColor } from './animations';
 
 function bubbleSort(arr, speed) {
-  const temp = cloneDeep(arr);
+  let temp = cloneDeep(arr);
   let output = [];
   const { myBlue, myGreen, myOrange, myRed } = myColors;
 
   // variable for determining whether or not any array values have been swapped per iteration
   let swapped = false;
-  const aStp = new RecurAniStep(arr);
+  const aStp = new AniStep(arr);
   output.push(cloneDeep(aStp));
 
   // for loop to interate through the length of the array
@@ -20,13 +20,15 @@ function bubbleSort(arr, speed) {
       // if the array elem at the current position is greater
       // than the value at the next elem, then swap
       const tempStore = [];
+      // setArrColor2(temp, [0, j], myOrange);
+      // if (j + 2 < temp.length - 1) setArrColor2(temp, [j + 2, temp.length], myOrange);
       setArrColor(temp.slice(0, j), myOrange);
-      if (j + 2 > temp.length - 1) setArrColor(temp.slice(j + 2), myOrange);
+      if (j + 2 < temp.length - 1) setArrColor(temp.slice(j + 1), myOrange);
       temp[j].color = myBlue;
       temp[j + 1].color = myBlue;
       aStp.array = temp;
       aStp.count();
-      aStp.delayMult = 2;
+      aStp.delayMult = 1;
       tempStore.push(cloneDeep(aStp));
 
       if (temp[j].value > temp[j + 1].value) {
