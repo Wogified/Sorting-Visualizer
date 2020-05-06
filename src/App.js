@@ -1,12 +1,12 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import { CssBaseline, ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
 import { deepOrange, cyan } from '@material-ui/core/colors';
-
+import { algos as Algorithms } from './data.json';
 import { Header, SortViewer } from './Components';
 
 function App() {
   const [darkMode, setDarkMode] = useState('dark');
-  const [algo, setAlgo] = useState('Bubble');
+  const [algo, setAlgo] = useState(Algorithms[0]);
   const initTheme = {
     palette: {
       primary: deepOrange,
@@ -24,8 +24,8 @@ function App() {
     setDarkMode(darkMode === 'light' ? 'dark' : 'light');
   };
 
-  const handleAlgorithmSelect = (id) => {
-    setAlgo(id);
+  const handleAlgorithmSelect = (algo) => {
+    setAlgo(algo);
   };
 
   return (
@@ -33,11 +33,12 @@ function App() {
       <Fragment>
         <CssBaseline />
         <Header
+          Algorithms={Algorithms}
           onThemeToggle={handleThemeToggle}
           darkMode={theme.palette.type}
           onAlgoSelect={handleAlgorithmSelect}
         />
-        <SortViewer algo={algo} />
+        <SortViewer algo={algo} Algorithms={Algorithms} />
       </Fragment>
     </ThemeProvider>
   );

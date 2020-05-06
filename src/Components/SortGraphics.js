@@ -9,6 +9,7 @@ import {
   bubbleSort,
   insertionSort,
   mergeSort,
+  quickSort,
   genericArrAnimate,
 } from '../Algos';
 
@@ -54,6 +55,7 @@ function SortGraphics({
   currStep,
   setCurrStep,
   setStepLimit,
+  setSortStep,
 }) {
   const classes = useStyles({ numElems });
   const parentRef = useRef(null);
@@ -86,6 +88,7 @@ function SortGraphics({
           aniSteps.slice(currStep),
           setSortElems,
           setCurrStep,
+          setSortStep,
           speed
         );
         setAnimationTimeouts(timeouts);
@@ -104,7 +107,7 @@ function SortGraphics({
     if (sortState === 2 && desiredStep < aniSteps.length) {
       console.log(desiredStep, aniSteps[desiredStep].step);
       // console.log('hi');
-      genericArrAnimate(aniSteps[desiredStep], setSortElems, setCurrStep, speed);
+      genericArrAnimate(aniSteps[desiredStep], setSortElems, setCurrStep, setSortStep, speed);
     }
   }, [desiredStep, currStep]);
 
@@ -149,22 +152,25 @@ function SortGraphics({
   const handleStartSort = () => {
     // stopAnimation(animationTimeouts);
     let animations;
-    switch (algo) {
-      case 'Bubble':
+    switch (algo.key) {
+      case 'bubble':
         animations = bubbleSort(sortElems, speed);
         break;
-      case 'Insertion':
+      case 'insertion':
         animations = insertionSort(sortElems, speed);
         break;
-      case 'Merge':
+      case 'merge':
         animations = mergeSort(sortElems, speed);
+        break;
+      case 'quick':
+        animations = quickSort(sortElems, speed);
         break;
       default:
         animations = bubbleSort(sortElems);
         break;
     }
     setAniSteps([...animations]);
-    const timeouts = genericArrAnimate(animations, setSortElems, setCurrStep, speed);
+    const timeouts = genericArrAnimate(animations, setSortElems, setCurrStep, setSortStep, speed);
     // console.log(animations);
     setAnimationTimeouts(timeouts);
   };

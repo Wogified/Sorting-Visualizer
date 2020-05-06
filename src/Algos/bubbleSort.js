@@ -17,6 +17,7 @@ function bubbleSort(arr, speed) {
     //  nested for loop to check each element in the array against the rest of the array
 
     for (let j = 0; j < arr.length - 1 - i; j += 1) {
+      aStp.sortCount();
       // if the array elem at the current position is greater
       // than the value at the next elem, then swap
       const tempStore = [];

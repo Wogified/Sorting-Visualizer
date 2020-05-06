@@ -3,12 +3,17 @@ import { myColors, swapArr } from './startingDataFunctions';
 class AniStep {
   constructor(array) {
     this.step = 0;
+    this.index = 0;
     this.array = array;
     this.level = 5;
     this.delayMult = 1;
   }
 
   count() {
+    this.index += 1;
+  }
+
+  sortCount() {
     this.step += 1;
   }
 }
@@ -63,18 +68,19 @@ function printArr(arr) {
   console.log('='.repeat(n * 2 + 2));
 }
 
-function genericHelper(animation, setState, setCurrStep) {
-  const { array, step } = animation;
+function genericHelper(animation, setState, setCurrStep, setSortStep) {
+  const { array, index, step } = animation;
   // printArr(array);
   // console.log(level, spd);
-  setCurrStep(step);
+  setCurrStep(index);
+  setSortStep(step);
   setState([...array]);
 }
 
-function genericArrAnimate(animations, setState, setCurrStep, sortSpeed) {
+function genericArrAnimate(animations, setState, setCurrStep, setSortStep, sortSpeed) {
   const n = animations.length;
   let delay = 200;
-  const speedRef = [600, 300, 200, 100, 50];
+  const speedRef = [600, 300, 200, 125, 75];
   const speed = speedRef[sortSpeed];
   let timeouts = [];
   console.log(animations);
@@ -83,12 +89,14 @@ function genericArrAnimate(animations, setState, setCurrStep, sortSpeed) {
     for (let i = 0; i < n; i += 1) {
       const { delayMult, level } = animations[i];
       if (level >= sortSpeed) {
-        timeouts.push(setTimeout(genericHelper, delay, animations[i], setState, setCurrStep));
+        timeouts.push(
+          setTimeout(genericHelper, delay, animations[i], setState, setCurrStep, setSortStep)
+        );
         delay += speed * delayMult;
       }
     }
   } else {
-    genericHelper(animations, setState, setCurrStep);
+    genericHelper(animations, setState, setCurrStep, setSortStep);
   }
 
   return timeouts;

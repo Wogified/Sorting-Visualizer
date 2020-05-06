@@ -14,11 +14,13 @@ function insertionSort(arr, speed) {
   for (let i = 1; i < arr.length; i += 1) {
     // for loop to compare current value to previous value(s)
     for (let j = i - 1; j >= 0; j -= 1) {
+      aStp.sortCount();
       const tempStore = [];
       // const animateStep = new AniStep(j + 1, j);
 
-      setArrColor(temp.slice(0, j), myOrange);
-      if (j + 2 < temp.length - 1) setArrColor(temp.slice(j + 1), myOrange);
+      setArrColor(temp, myOrange);
+      // setArrColor(temp.slice(0, j), myOrange);
+      // if (j + 2 < temp.length - 1) setArrColor(temp.slice(j + 1), myOrange);
       temp[j].color = myBlue;
       temp[j + 1].color = myBlue;
       aStp.array = temp;

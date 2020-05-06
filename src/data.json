@@ -1,0 +1,20 @@
+{
+  "algos": [
+    {
+      "key": "bubble",
+      "title": "Bubble Sort"
+    },
+    {
+      "key": "insert",
+      "title": "Insertion Sort"
+    },
+    {
+      "key": "merge",
+      "title": "Merge Sort"
+    },
+    {
+      "key": "quick",
+      "title": "Quick Sort"
+    }
+  ]
+}

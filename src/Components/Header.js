@@ -11,16 +11,13 @@ import {
   Drawer,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 // import InboxIcon from '@material-ui/icons/MoveToInbox';
 // import MailIcon from '@material-ui/icons/Mail';
-import { withContext } from '../context';
-import { sortAlgos } from '../Algos';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   header: {
     flex: 1,
     textAlign: 'left',
@@ -28,9 +25,23 @@ const useStyles = makeStyles({
   toolbar: {
     paddingLeft: 0,
   },
-});
+  listItemContainer: {
+    display: 'flex',
+    [theme.breakpoints.up('sm')]: {
+      width: '25vw',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '50vw',
+    },
+  },
+  listItem: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
+}));
 
-function Header({ onThemeToggle, onAlgoSelect }) {
+function Header({ onThemeToggle, onAlgoSelect, Algorithms }) {
   const classes = useStyles();
   const [state, setState] = useState({
     checkedA: true,
@@ -38,7 +49,6 @@ function Header({ onThemeToggle, onAlgoSelect }) {
   });
   const [drawerState, setDrawerState] = useState(false);
 
-  const sortAlgos = ['Bubble', 'Insertion', 'Merge', 'Quick'];
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -59,10 +69,17 @@ function Header({ onThemeToggle, onAlgoSelect }) {
         {/* there is a warning that will pop up when using drawing about findDOMnode */}
         <Drawer anchor="left" open={drawerState} onClose={toggleDrawer(false)}>
           <List>
-            {sortAlgos.map((text, index) => (
-              <ListItem button key={text} onClick={() => onAlgoSelect(text)}>
+            {Algorithms.map((item, index) => (
+              <ListItem
+                button
+                className={classes.listItemContainer}
+                key={item.key}
+                onClick={() => onAlgoSelect(item)}
+              >
                 {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
-                <ListItemText primary={text} />
+                <ListItemText className={classes.listItem}>
+                  <Typography variant="h4">{item.title}</Typography>
+                </ListItemText>
               </ListItem>
             ))}
           </List>
@@ -90,4 +107,4 @@ Header.propTypes = {
 };
 
 Header.defaultProps = {};
-export default withContext(Header);
+export default Header;

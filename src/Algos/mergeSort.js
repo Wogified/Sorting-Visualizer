@@ -7,12 +7,12 @@ function mergeSort(arr, speed) {
   const temp = cloneDeep(arr);
   let prevArr = [...temp];
   const { myBlue, myGreen, myOrange, myTeal, myPurple } = myColors;
-  let count = 0;
 
   const aStp = new AniStep(arr);
   output.push(cloneDeep(aStp));
 
   function mergeArr(a, b, start, end) {
+    aStp.sortCount();
     // console.log(start, end);
     const tempStore = [];
     const arrImage = prevArr;
@@ -73,8 +73,7 @@ function mergeSort(arr, speed) {
         aStp.count();
         tempStore.push(cloneDeep(aStp));
       }
-
-      count = aStp.index + 1;
+      aStp.sortCount();
     }
     output = output.concat(tempStore);
     // set final sorted portion of the array to be green

@@ -38,6 +38,12 @@ const useStyles = makeStyles(({ breakpoints }) => ({
   description: {
     textAlign: 'center',
     padding: '1em',
+    [breakpoints.up('sm')]: {
+      width: '50%',
+    },
+    [breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   itemContainer: {
     display: 'flex',
@@ -60,6 +66,11 @@ const useStyles = makeStyles(({ breakpoints }) => ({
       width: '80%',
     },
   },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 const marks = [
@@ -77,18 +88,20 @@ const marks = [
   },
 ];
 
-function SortViewer({ algo }) {
+function SortViewer({ algo, Algorithms }) {
   const classes = useStyles();
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('xs'));
   const [sliderState, setSlider] = useState(10);
   const [speed, setSpeed] = useState(2);
-  const [stop, setStop] = useState(false);
-  const [play, setPlay] = useState(false);
   const [sortState, setSortState] = useState(0);
   const [scramble, setScramble] = useState(false);
+  // current animation step
   const [currStep, setCurrStep] = useState(0);
+  // desired animation step
   const [desiredStep, setDesiredStep] = useState(0);
+  // sort algorithm step
+  const [sortStep, setSortStep] = useState(0);
   const [stepLimit, setStepLimit] = useState(0);
 
   // checks for screens that are mobile sized and below
@@ -102,12 +115,9 @@ function SortViewer({ algo }) {
 
   const handleScramble = () => {
     setScramble(!scramble);
-    setStop(false);
   };
 
   const handleStopSort = () => {
-    setStop(false);
-    setPlay(false);
     setSortState(0);
     setCurrStep(0);
     setDesiredStep(0);
@@ -117,12 +127,9 @@ function SortViewer({ algo }) {
   return (
     <Fragment>
       <Typography className={classes.title} variant="h1">
-        {algo}
-        {' Sort'}
+        {algo.title}
       </Typography>
-      <Typography className={classes.description} variant="body1">
-        This is where I would put a brief description of how the sorting algorithm works
-      </Typography>
+
       <Grid container>
         <Grid item xs={12} sm={4} className={classes.itemContainer}>
           <Button onClick={handleScramble} disabled={sortState > 0}>
@@ -174,7 +181,7 @@ function SortViewer({ algo }) {
           />
         </Grid>
         <Grid item xs={12} sm={12} className={classes.itemContainer}>
-          <Typography>Step: {currStep}</Typography>
+          <Typography>Step: {sortStep}</Typography>
         </Grid>
 
         <Grid item xs={12} sm={12} className={classes.sortGraphicsContainer}>
@@ -187,6 +194,7 @@ function SortViewer({ algo }) {
             desiredStep={desiredStep}
             currStep={currStep}
             setCurrStep={setCurrStep}
+            setSortStep={setSortStep}
             setStepLimit={setStepLimit}
           />
         </Grid>
