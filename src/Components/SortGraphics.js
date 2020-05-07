@@ -145,7 +145,7 @@ function SortGraphics({
     enter: ({ x, width, height }) => ({ x, width, height, opacity: 1 }),
     update: ({ x, width, height }) => ({ x, width, height }),
     leave: { height: 0, opacity: 0 },
-    config: { mass: 1, tension: 200, friction: 20 },
+    config: { mass: 1, tension: 500, friction: 50 },
   });
 
   // Todo: implement bubble and insertion sorts with generic animation

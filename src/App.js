@@ -6,7 +6,7 @@ import { Header, SortViewer } from './Components';
 
 function App() {
   const [darkMode, setDarkMode] = useState('dark');
-  const [algo, setAlgo] = useState(Algorithms[0]);
+  const [algo, setAlgo] = useState(Algorithms[3]);
   const initTheme = {
     palette: {
       primary: deepOrange,
