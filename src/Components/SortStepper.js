@@ -6,7 +6,15 @@ import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 
-function SortStepper({ onStop, currStep, onSetDesiredStep, stepLim, sortState, onSetSortState }) {
+function SortStepper({
+  onStop,
+  currStep,
+  onSetDesiredStep,
+  stepLim,
+  sortState,
+  onSetSortState,
+  algo,
+}) {
   //   const classes = useStyles();
 
   const handleCurrStepUpdate = (val) => {
@@ -33,7 +41,7 @@ function SortStepper({ onStop, currStep, onSetDesiredStep, stepLim, sortState, o
       >
         <ArrowBackIcon />
       </IconButton>
-      <IconButton onClick={handlePlayPause}>
+      <IconButton disabled={!algo} onClick={handlePlayPause}>
         {sortState === 1 ? <PauseIcon /> : <PlayArrowIcon />}
       </IconButton>
       <IconButton disabled={sortState === 0} onClick={onStop}>

@@ -6,7 +6,8 @@ import { Header, SortViewer } from './Components';
 
 function App() {
   const [darkMode, setDarkMode] = useState('dark');
-  const [algo, setAlgo] = useState(Algorithms[3]);
+  const [algo, setAlgo] = useState(null);
+
   const initTheme = {
     palette: {
       primary: deepOrange,
@@ -38,6 +39,7 @@ function App() {
           darkMode={theme.palette.type}
           onAlgoSelect={handleAlgorithmSelect}
         />
+
         <SortViewer algo={algo} Algorithms={Algorithms} />
       </Fragment>
     </ThemeProvider>

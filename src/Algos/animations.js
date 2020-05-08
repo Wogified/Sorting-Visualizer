@@ -7,6 +7,7 @@ class AniStep {
     this.array = array;
     this.level = 5;
     this.delayMult = 1;
+    this.last = false;
   }
 
   count() {
@@ -71,7 +72,7 @@ function printArr(arr) {
 function genericHelper(animation, setState, setCurrStep, setSortStep) {
   const { array, index, step } = animation;
   // printArr(array);
-  // console.log(level, spd);
+  // console.log(index);
   setCurrStep(index);
   setSortStep(step);
   setState([...array]);
@@ -83,7 +84,7 @@ function genericArrAnimate(animations, setState, setCurrStep, setSortStep, sortS
   const speedRef = [600, 300, 200, 125, 75];
   const speed = speedRef[sortSpeed];
   let timeouts = [];
-  console.log(animations);
+  // console.log(animations);
 
   if (n) {
     for (let i = 0; i < n; i += 1) {
@@ -102,20 +103,23 @@ function genericArrAnimate(animations, setState, setCurrStep, setSortStep, sortS
   return timeouts;
 }
 
-// function AnimateSortFinished(source, delay, setState) {
-//   const timeouts = [];
-//   for (let i = 0; i < source.length; i += 1) {
-//     timeouts.push(
-//       setTimeout(() => {
-//         const newArr = [...source];
-//         newArr[i].color = myColors.myGreen;
-//         setState(newArr);
-//       }, delay)
-//     );
-//     delay += 50;
-//   }
-//   return timeouts;
-// }
+function AnimateSortFinished(source, setState) {
+  const { myOrange, myGreen } = myColors;
+  const timeouts = [];
+  let delay = 0;
+  // setArrColor(source, myOrange);
+  for (let i = 0; i < source.length; i += 1) {
+    timeouts.push(
+      setTimeout(() => {
+        const newArr = [...source];
+        newArr[i].color = myGreen;
+        setState(newArr);
+      }, delay)
+    );
+    delay += 25;
+  }
+  return timeouts;
+}
 
 function stopAnimation(timeouts) {
   for (let i = 0; i < timeouts.length; i += 1) {
@@ -123,7 +127,7 @@ function stopAnimation(timeouts) {
   }
 }
 
-export { stopAnimation, AniStep, genericArrAnimate, setArrColor };
+export { stopAnimation, AniStep, genericArrAnimate, setArrColor, AnimateSortFinished };
 
 // class AnimationStep {
 //   constructor(index1, index2) {

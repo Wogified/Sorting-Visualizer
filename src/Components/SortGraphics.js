@@ -11,6 +11,7 @@ import {
   mergeSort,
   quickSort,
   genericArrAnimate,
+  AnimateSortFinished,
 } from '../Algos';
 
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
@@ -21,7 +22,9 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
   },
   sortElem: {
     backgroundColor: palette.primary.main,
-    margin: '10%',
+    marginLeft: '10%',
+    marginRight: '10%',
+    // margin: '10%',
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
     height: '100%',
@@ -56,6 +59,7 @@ function SortGraphics({
   setCurrStep,
   setStepLimit,
   setSortStep,
+  onStop,
 }) {
   const classes = useStyles({ numElems });
   const parentRef = useRef(null);
@@ -94,10 +98,10 @@ function SortGraphics({
         setAnimationTimeouts(timeouts);
       }
     } else if (sortState === 2) {
-      console.log(sortState, 'paused');
+      // console.log(sortState, 'paused');
       stopAnimation(animationTimeouts);
     } else if (sortState === 0) {
-      console.log(sortState, 'stopped');
+      // console.log(sortState, 'stopped');
       stopAnimation(animationTimeouts);
       setSortElems([...resetArrColors(sortElems)]);
     }
@@ -105,9 +109,15 @@ function SortGraphics({
 
   useEffect(() => {
     if (sortState === 2 && desiredStep < aniSteps.length) {
-      console.log(desiredStep, aniSteps[desiredStep].step);
+      // console.log(desiredStep, aniSteps[desiredStep].step);
       // console.log('hi');
       genericArrAnimate(aniSteps[desiredStep], setSortElems, setCurrStep, setSortStep, speed);
+    }
+    if (aniSteps.length > 0) {
+      if (aniSteps[currStep].last && sortState === 1) {
+        AnimateSortFinished(sortElems, setSortElems);
+        onStop();
+      }
     }
   }, [desiredStep, currStep]);
 
@@ -123,6 +133,7 @@ function SortGraphics({
   useEffect(() => {
     stopAnimation(animationTimeouts);
     setSortElems(genArr(numElems, theme));
+    onStop();
   }, [scramble, algo]);
 
   //   grab the dimensions of the parent element of the sorting elems

@@ -31,7 +31,11 @@ const useStyles = makeStyles(({ breakpoints }) => ({
     overflowY: 'auto',
   },
   title: {
-    width: '100vw',
+    textAlign: 'center',
+    padding: '.5em',
+  },
+  noTitle: {
+    width: '60vw',
     textAlign: 'center',
     padding: '.5em',
   },
@@ -55,8 +59,8 @@ const useStyles = makeStyles(({ breakpoints }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    paddingTop: 5,
-    paddingBottom: 10,
+    paddingTop: '10vh',
+    paddingBottom: '10vh',
   },
   slider: {
     [breakpoints.up('sm')]: {
@@ -70,6 +74,13 @@ const useStyles = makeStyles(({ breakpoints }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  titleContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '20vh',
   },
 }));
 
@@ -122,13 +133,26 @@ function SortViewer({ algo, Algorithms }) {
     setCurrStep(0);
     setDesiredStep(0);
     setStepLimit(0);
+    setSortStep(0);
+  };
+  const renderTitle = () => {
+    if (algo) {
+      return (
+        <Typography className={classes.title} variant="h1">
+          {algo.title}
+        </Typography>
+      );
+    }
+    return (
+      <Typography className={classes.noTitle} variant="h4">
+        Choose a sorting algorithm from the menu in the top left corner.
+      </Typography>
+    );
   };
 
   return (
     <Fragment>
-      <Typography className={classes.title} variant="h1">
-        {algo.title}
-      </Typography>
+      <div className={classes.titleContainer}>{renderTitle()}</div>
 
       <Grid container>
         <Grid item xs={12} sm={4} className={classes.itemContainer}>
@@ -178,6 +202,7 @@ function SortViewer({ algo, Algorithms }) {
             onSetDesiredStep={setDesiredStep}
             stepLim={stepLimit}
             currStep={currStep}
+            algo={algo}
           />
         </Grid>
         <Grid item xs={12} sm={12} className={classes.itemContainer}>
@@ -196,6 +221,7 @@ function SortViewer({ algo, Algorithms }) {
             setCurrStep={setCurrStep}
             setSortStep={setSortStep}
             setStepLimit={setStepLimit}
+            onStop={handleStopSort}
           />
         </Grid>
       </Grid>

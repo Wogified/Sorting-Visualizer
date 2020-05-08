@@ -3,7 +3,7 @@ import insertionSort from './insertionSort';
 import mergeSort from './mergeSort';
 import quickSort from './quickSort';
 import { genArr, shuffle, resetArrColors } from './startingDataFunctions';
-import { stopAnimation, genericArrAnimate } from './animations';
+import { stopAnimation, genericArrAnimate, AnimateSortFinished } from './animations';
 
 export {
   insertionSort,
@@ -15,4 +15,5 @@ export {
   resetArrColors,
   stopAnimation,
   genericArrAnimate,
+  AnimateSortFinished,
 };

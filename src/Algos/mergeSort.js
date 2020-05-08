@@ -116,6 +116,12 @@ function mergeSort(arr, speed) {
   let n = temp.length;
   const result = helper(temp, 0, n);
 
+  // Clear out all colors and mark as last step
+  setArrColor(aStp.array, myOrange);
+  aStp.last = true;
+  aStp.count();
+  output.push(cloneDeep(aStp));
+
   return output;
 }
 
