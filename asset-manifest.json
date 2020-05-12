@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/sort_viz_app/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/sort_viz_app/static/js/main.474b0cbf.chunk.js",
-    "main.js.map": "/sort_viz_app/static/js/main.474b0cbf.chunk.js.map",
-    "runtime-main.js": "/sort_viz_app/static/js/runtime-main.86c5bb1e.js",
-    "runtime-main.js.map": "/sort_viz_app/static/js/runtime-main.86c5bb1e.js.map",
-    "static/js/2.6e34ddfa.chunk.js": "/sort_viz_app/static/js/2.6e34ddfa.chunk.js",
-    "static/js/2.6e34ddfa.chunk.js.map": "/sort_viz_app/static/js/2.6e34ddfa.chunk.js.map",
-    "index.html": "/sort_viz_app/index.html",
-    "precache-manifest.7146a1e06b4cfb4458383518cdd94464.js": "/sort_viz_app/precache-manifest.7146a1e06b4cfb4458383518cdd94464.js",
-    "service-worker.js": "/sort_viz_app/service-worker.js",
-    "static/css/main.5ecd60fb.chunk.css.map": "/sort_viz_app/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.6e34ddfa.chunk.js.LICENSE.txt": "/sort_viz_app/static/js/2.6e34ddfa.chunk.js.LICENSE.txt"
+    "main.css": "/Sorting-Visualizer/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/Sorting-Visualizer/static/js/main.474b0cbf.chunk.js",
+    "main.js.map": "/Sorting-Visualizer/static/js/main.474b0cbf.chunk.js.map",
+    "runtime-main.js": "/Sorting-Visualizer/static/js/runtime-main.2b6593e3.js",
+    "runtime-main.js.map": "/Sorting-Visualizer/static/js/runtime-main.2b6593e3.js.map",
+    "static/js/2.6e34ddfa.chunk.js": "/Sorting-Visualizer/static/js/2.6e34ddfa.chunk.js",
+    "static/js/2.6e34ddfa.chunk.js.map": "/Sorting-Visualizer/static/js/2.6e34ddfa.chunk.js.map",
+    "index.html": "/Sorting-Visualizer/index.html",
+    "precache-manifest.0c5697ba6d64e0241b811f6b17841622.js": "/Sorting-Visualizer/precache-manifest.0c5697ba6d64e0241b811f6b17841622.js",
+    "service-worker.js": "/Sorting-Visualizer/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/Sorting-Visualizer/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.6e34ddfa.chunk.js.LICENSE.txt": "/Sorting-Visualizer/static/js/2.6e34ddfa.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.86c5bb1e.js",
+    "static/js/runtime-main.2b6593e3.js",
     "static/js/2.6e34ddfa.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
     "static/js/main.474b0cbf.chunk.js"
