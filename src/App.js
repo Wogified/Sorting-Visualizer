@@ -5,9 +5,12 @@ import { algos as Algorithms } from './data.json';
 import { Header, SortViewer } from './Components';
 
 function App() {
+  // Dark mode toggle
   const [darkMode, setDarkMode] = useState('dark');
+  // Variable for which sort algo to use
   const [algo, setAlgo] = useState(null);
 
+  // basic theme colors
   const initTheme = {
     palette: {
       primary: deepOrange,
@@ -19,12 +22,15 @@ function App() {
       type: darkMode,
     },
   };
+  // Scales the font sizes based on window size
   const theme = responsiveFontSizes(createMuiTheme(initTheme));
 
+  // Callback for handling dark/light mode
   const handleThemeToggle = () => {
     setDarkMode(darkMode === 'light' ? 'dark' : 'light');
   };
 
+  // Callback for handling algorithm selection
   const handleAlgorithmSelect = (algo) => {
     setAlgo(algo);
   };
@@ -32,6 +38,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Fragment>
+        {/* sets some default styling and paddings */}
         <CssBaseline />
         <Header
           Algorithms={Algorithms}
@@ -39,7 +46,6 @@ function App() {
           darkMode={theme.palette.type}
           onAlgoSelect={handleAlgorithmSelect}
         />
-
         <SortViewer algo={algo} Algorithms={Algorithms} />
       </Fragment>
     </ThemeProvider>

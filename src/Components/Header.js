@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import {
   AppBar,
   Toolbar,
@@ -14,8 +13,6 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-// import InboxIcon from '@material-ui/icons/MoveToInbox';
-// import MailIcon from '@material-ui/icons/Mail';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -48,13 +45,14 @@ function Header({ onThemeToggle, onAlgoSelect, Algorithms }) {
     checkedB: true,
   });
   const [drawerState, setDrawerState] = useState(false);
-
+  // handling drawer menu toggle
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
     setDrawerState(open);
   };
+  // handling dark theme toggle
   const handleChange = (name) => (event) => {
     setState({ ...state, [name]: event.target.checked });
     onThemeToggle();
@@ -69,14 +67,13 @@ function Header({ onThemeToggle, onAlgoSelect, Algorithms }) {
         {/* there is a warning that will pop up when using drawing about findDOMnode */}
         <Drawer anchor="left" open={drawerState} onClose={toggleDrawer(false)}>
           <List>
-            {Algorithms.map((item, index) => (
+            {Algorithms.map((item) => (
               <ListItem
                 button
                 className={classes.listItemContainer}
                 key={item.key}
                 onClick={() => onAlgoSelect(item)}
               >
-                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText className={classes.listItem}>
                   <Typography variant="h4">{item.title}</Typography>
                 </ListItemText>
@@ -103,7 +100,8 @@ function Header({ onThemeToggle, onAlgoSelect, Algorithms }) {
 
 Header.propTypes = {
   onThemeToggle: PropTypes.func.isRequired,
-  darkMode: PropTypes.string.isRequired,
+  onAlgoSelect: PropTypes.func.isRequired,
+  Algorithms: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 Header.defaultProps = {};

@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Typography,
   Grid,
@@ -80,7 +81,7 @@ const useStyles = makeStyles(({ breakpoints }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '20vh',
+    height: '15vh',
   },
 }));
 
@@ -99,9 +100,10 @@ const marks = [
   },
 ];
 
-function SortViewer({ algo, Algorithms }) {
+function SortViewer({ algo }) {
   const classes = useStyles();
   const theme = useTheme();
+  // Detects if screen is mobile sized
   const mobile = useMediaQuery(theme.breakpoints.down('xs'));
   const [sliderState, setSlider] = useState(10);
   const [speed, setSpeed] = useState(2);
@@ -113,28 +115,31 @@ function SortViewer({ algo, Algorithms }) {
   const [desiredStep, setDesiredStep] = useState(0);
   // sort algorithm step
   const [sortStep, setSortStep] = useState(0);
+  // sets maximum value that the stepper can go
   const [stepLimit, setStepLimit] = useState(0);
 
   // checks for screens that are mobile sized and below
   const handleSpeedChange = (event) => {
     setSpeed(event.target.value);
   };
-
+  // Handle Slider
   const handleElemsChange = (event, newValue) => {
     setSlider(newValue);
   };
-
+  // Handle scramble
   const handleScramble = () => {
     setScramble(!scramble);
   };
 
+  // Handle End of Sort
   const handleStopSort = () => {
     setSortState(0);
     setCurrStep(0);
     setDesiredStep(0);
     setStepLimit(0);
-    setSortStep(0);
+    // setSortStep(0);
   };
+  // On init, there is not algo selected. Therefore show instructions for usage
   const renderTitle = () => {
     if (algo) {
       return (
@@ -183,17 +188,11 @@ function SortViewer({ algo, Algorithms }) {
             disabled={sortState > 0}
           >
             <MenuItem value={0}>Slow</MenuItem>
-            <MenuItem value={1}>Slowish</MenuItem>
             <MenuItem value={2}>Medium</MenuItem>
-            <MenuItem value={3}>Fastish</MenuItem>
             <MenuItem value={4}>Fast</MenuItem>
           </Select>
         </Grid>
-        {/* <Grid item xs={12} sm={12} className={classes.itemContainer}>
-          <Button onClick={() => handleSortState(!sort)}>
-            {sort ? 'Stop Sort' : 'Start Sort'}
-          </Button>
-        </Grid> */}
+
         <Grid item xs={12} sm={12} className={classes.itemContainer}>
           <SortStepper
             sortState={sortState}
@@ -228,5 +227,16 @@ function SortViewer({ algo, Algorithms }) {
     </Fragment>
   );
 }
+
+SortViewer.propTypes = {
+  algo: PropTypes.shape({
+    key: PropTypes.string,
+    title: PropTypes.string,
+  }),
+};
+
+SortViewer.defaultProps = {
+  algo: null,
+};
 
 export default SortViewer;

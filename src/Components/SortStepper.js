@@ -1,10 +1,11 @@
-import React, { Fragment, useState } from 'react';
-import { IconButton, Typography } from '@material-ui/core';
+import React, { Fragment } from 'react';
+import { IconButton } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
+import PropTypes from 'prop-types';
 
 function SortStepper({
   onStop,
@@ -15,15 +16,10 @@ function SortStepper({
   onSetSortState,
   algo,
 }) {
-  //   const classes = useStyles();
-
   const handleCurrStepUpdate = (val) => {
-    // TODO: add a max length limit for steps
     if (val > 0 && currStep < stepLim) {
-      // console.log(currStep, 'add 1');
       onSetDesiredStep(currStep + 1);
     } else if (val < 0 && currStep > 0) {
-      // console.log(currStep, 'minus 1');
       onSetDesiredStep(currStep - 1);
     }
   };
@@ -56,5 +52,25 @@ function SortStepper({
     </Fragment>
   );
 }
+
+SortStepper.propTypes = {
+  algo: PropTypes.shape({
+    key: PropTypes.string,
+    title: PropTypes.string,
+  }),
+  sortState: PropTypes.number,
+  currStep: PropTypes.number,
+  onSetDesiredStep: PropTypes.func.isRequired,
+  onStop: PropTypes.func.isRequired,
+  stepLim: PropTypes.number,
+  onSetSortState: PropTypes.func.isRequired,
+};
+
+SortStepper.defaultProps = {
+  algo: null,
+  sortState: 0,
+  currStep: 0,
+  stepLim: 0,
+};
 
 export default SortStepper;

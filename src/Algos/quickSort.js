@@ -24,17 +24,19 @@ function quickSort(arr1, speed) {
     const mid = Math.floor((start + end) / 2);
     const pivot = arr[mid];
     setArrColor(arr, myOrange);
-    setArrColor(arr.slice(start, mid), myPurple);
-    setArrColor(arr.slice(mid, end + 1), myTeal);
+    setArrColor(arr.slice(start, end + 1), myPurple);
+    // setArrColor(arr.slice(mid, end + 1), myTeal);
     pivot.color = myBlue;
     aStp.count();
     aStp.array = arr;
+    aStp.delayMult = 3;
     tempStore.push(cloneDeep(aStp));
 
     while (true) {
       i += 1;
       while (arr[i].value < pivot.value) {
         arr[i].color = myOrange;
+        aStp.delayMult = 1;
         aStp.sortCount();
         aStp.count();
         aStp.array = arr;
@@ -44,22 +46,20 @@ function quickSort(arr1, speed) {
       j -= 1;
       while (arr[j].value > pivot.value) {
         arr[j].color = myOrange;
+        aStp.delayMult = 1;
         aStp.sortCount();
         aStp.count();
         aStp.array = arr;
         tempStore.push(cloneDeep(aStp));
         j -= 1;
       }
-      // arr[i].color = myGreen;
-      // arr[j].color = myGreen;
-      // aStp.count();
-      // tempStore.push(cloneDeep(aStp));
 
       if (i >= j) {
         output = output.concat(tempStore);
         return j;
       }
       swap(arr, i, j);
+      aStp.delayMult = 1;
       aStp.count();
       tempStore.push(cloneDeep(aStp));
     }

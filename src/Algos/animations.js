@@ -1,4 +1,4 @@
-import { myColors, swapArr } from './startingDataFunctions';
+import { myColors } from './startingDataFunctions';
 
 class AniStep {
   constructor(array) {
@@ -19,8 +19,8 @@ class AniStep {
   }
 }
 
+// Set the entire input arr to desired color
 function setArrColor(arr, color) {
-  // console.log(arr);
   if (arr.length) {
     for (let i = 0; i < arr.length; i += 1) {
       if (arr[i]) arr[i].color = color;
@@ -29,50 +29,9 @@ function setArrColor(arr, color) {
   return arr;
 }
 
-function printArr(arr) {
-  let output = '[';
-  let output2 = '[';
-  let n = arr.length;
-  const { myOrange, myGreen, myRed, myPurple, myTeal, myBlue } = myColors;
-  for (let i = 0; i < arr.length; i += 1) {
-    switch (arr[i].color) {
-      case myBlue:
-        output += 'b';
-        break;
-      case myOrange:
-        output += 'o';
-        break;
-      case myGreen:
-        output += 'g';
-        break;
-      case myRed:
-        output += 'r';
-        break;
-      case myPurple:
-        output += 'p';
-        break;
-      case myTeal:
-        output += 't';
-        break;
-      default:
-        break;
-    }
-    output2 += `${arr[i].value}`;
-    if (i < arr.length - 1) {
-      output += ',';
-      output2 += ',';
-    }
-  }
-  output += ']';
-  // console.log(output2);
-  console.log(output);
-  console.log('='.repeat(n * 2 + 2));
-}
-
+// setTimeout Animation Callback function
 function genericHelper(animation, setState, setCurrStep, setSortStep) {
   const { array, index, step } = animation;
-  // printArr(array);
-  // console.log(index);
   setCurrStep(index);
   setSortStep(step);
   setState([...array]);
@@ -83,8 +42,7 @@ function genericArrAnimate(animations, setState, setCurrStep, setSortStep, sortS
   let delay = 200;
   const speedRef = [600, 300, 200, 125, 75];
   const speed = speedRef[sortSpeed];
-  let timeouts = [];
-  // console.log(animations);
+  const timeouts = [];
 
   if (n) {
     for (let i = 0; i < n; i += 1) {
@@ -103,11 +61,12 @@ function genericArrAnimate(animations, setState, setCurrStep, setSortStep, sortS
   return timeouts;
 }
 
+// Generate a animation that sets the color of all elems to green incrementally
 function AnimateSortFinished(source, setState) {
-  const { myOrange, myGreen } = myColors;
+  const { myGreen } = myColors;
   const timeouts = [];
   let delay = 0;
-  // setArrColor(source, myOrange);
+
   for (let i = 0; i < source.length; i += 1) {
     timeouts.push(
       setTimeout(() => {
@@ -129,65 +88,42 @@ function stopAnimation(timeouts) {
 
 export { stopAnimation, AniStep, genericArrAnimate, setArrColor, AnimateSortFinished };
 
-// class AnimationStep {
-//   constructor(index1, index2) {
-//     this.ind1 = index1;
-//     this.ind2 = index2;
-//     this.swap = false;
-//     this.compare = false;
-//     this.delayMult = 1;
-//   }
-// }
-
-// function arrAnimate(arr, animation, setState, sortSpeed) {
-//   const { ind1, ind2, swap, compare } = animation;
-//   const { myBlue, myOrange, myGreen, myRed } = myColors;
-//   let newArr = [];
-//   if (swap) newArr = [...swapArr(arr, ind1, ind2)];
-//   else newArr = [...arr];
-//   for (let i = 0; i < newArr.length; i += 1) {
-//     let temp1 = ind1;
-//     let temp2 = ind2;
-//     if (swap) {
-//       temp1 = ind2;
-//       temp2 = ind1;
+// function printArr(arr) {
+//   let output = '[';
+//   let output2 = '[';
+//   let n = arr.length;
+//   const { myOrange, myGreen, myRed, myPurple, myTeal, myBlue } = myColors;
+//   for (let i = 0; i < arr.length; i += 1) {
+//     switch (arr[i].color) {
+//       case myBlue:
+//         output += 'b';
+//         break;
+//       case myOrange:
+//         output += 'o';
+//         break;
+//       case myGreen:
+//         output += 'g';
+//         break;
+//       case myRed:
+//         output += 'r';
+//         break;
+//       case myPurple:
+//         output += 'p';
+//         break;
+//       case myTeal:
+//         output += 't';
+//         break;
+//       default:
+//         break;
 //     }
-//     if (i === temp1) newArr[i].color = myBlue;
-//     else if (i === temp2 && sortSpeed >= 100) {
-//       if (compare) newArr[i].color = myGreen;
-//       else newArr[i].color = myRed;
-//     } else newArr[i].color = myOrange;
-//   }
-//   setState(newArr);
-// }
-
-// function AnimateSort(source, animations, setState, sortSpeed, type = null) {
-//   const n = animations.length;
-//   let delay = 200;
-//   const speedRef = [600, 300, 200, 100, 15];
-//   const speed = speedRef[sortSpeed];
-//   // loop through all recorded iterations
-//   const timeouts = [];
-//   for (let i = 0; i < n; i += 1) {
-//     for (let j = 0; j < animations[i].length; j += 1) {
-//       const { delayMult } = animations[i][j];
-//       if (type === null)
-//         timeouts.push(setTimeout(arrAnimate, delay, source, animations[i][j], setState, speed));
-//       else timeouts.push(setTimeout(setState, delay, [...animations[i][j].array]));
-//       delay += speed * delayMult;
+//     output2 += `${arr[i].value}`;
+//     if (i < arr.length - 1) {
+//       output += ',';
+//       output2 += ',';
 //     }
 //   }
-//   // add animation to turn all elems green after sorting is complete
-//   for (let i = 0; i < source.length; i += 1) {
-//     timeouts.push(
-//       setTimeout(() => {
-//         const newArr = [...source];
-//         newArr[i].color = myColors.myGreen;
-//         setState(newArr);
-//       }, delay)
-//     );
-//     delay += 50;
-//   }
-
-//   return timeouts;
+//   output += ']';
+//   // console.log(output2);
+//   console.log(output);
+//   console.log('='.repeat(n * 2 + 2));
 // }

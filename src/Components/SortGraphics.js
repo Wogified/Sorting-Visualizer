@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
-import { useTransition, animated as a, config } from 'react-spring';
-import { Button, makeStyles, useTheme } from '@material-ui/core';
+import { useTransition, animated as a } from 'react-spring';
+import { makeStyles, useTheme } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {
   genArr,
@@ -64,15 +64,19 @@ function SortGraphics({
   const classes = useStyles({ numElems });
   const parentRef = useRef(null);
   const theme = useTheme();
+  // Controls the number of elements to sort
   const [sortElems, setSortElems] = useState(genArr(numElems, theme));
+  // For tracking interval timeouts created by animation
   const [animationTimeouts, setAnimationTimeouts] = useState([]);
+  // Keeps a history of all sort steps
   const [aniSteps, setAniSteps] = useState([]);
+  // Tracks the size of the container for the sort elements
   const [containerDim, setContainerDim] = useState([0, 0]);
   const [contWidth, contHeight] = containerDim;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
   const width = contWidth / numElems;
 
+  // Refreshes sort elems whenever the user changes the slider for num of sort elems
   useEffect(() => {
     setSortElems(genArr(numElems));
   }, [numElems]);
@@ -82,35 +86,52 @@ function SortGraphics({
     setStepLimit(aniSteps.length);
   }, [aniSteps]);
 
-  // pause Animation Effect
+  // Handles Playback control updates
   useEffect(() => {
     if (sortState === 1) {
-      // console.log(sortState, 'play');
+      /*
+      Play State 
+      if the sort process has not been started before, then use handleStartsort
+      Otherwise, use previously generated animation steps to continue from 
+      where the animation was paused
+      */
       if (currStep === 0) handleStartSort();
       else {
-        let timeouts = genericArrAnimate(
+        const timeouts = genericArrAnimate(
           aniSteps.slice(currStep),
           setSortElems,
           setCurrStep,
           setSortStep,
           speed
         );
+        // Update animation timeouts so that they can be stopped if necessary
         setAnimationTimeouts(timeouts);
       }
     } else if (sortState === 2) {
-      // console.log(sortState, 'paused');
+      /*
+      Paused State 
+
+      stop all animation timeouts.
+      */
       stopAnimation(animationTimeouts);
     } else if (sortState === 0) {
-      // console.log(sortState, 'stopped');
+      /*
+      Stop State
+
+      stop all animation timeouts 
+      and reset all colors
+      */
       stopAnimation(animationTimeouts);
       setSortElems([...resetArrColors(sortElems)]);
     }
   }, [sortState]);
 
+  /*
+  Step by Step Animation controls.
+  as the desired step changes, the animation will update the sort elems
+*/
   useEffect(() => {
     if (sortState === 2 && desiredStep < aniSteps.length) {
-      // console.log(desiredStep, aniSteps[desiredStep].step);
-      // console.log('hi');
       genericArrAnimate(aniSteps[desiredStep], setSortElems, setCurrStep, setSortStep, speed);
     }
     if (aniSteps.length > 0) {
@@ -121,8 +142,7 @@ function SortGraphics({
     }
   }, [desiredStep, currStep]);
 
-  //   console.log(sortElems);
-
+  // Handles window resizing
   const updateWidthAndHeight = () => {
     setWindowWidth(window.innerWidth);
   };
@@ -130,6 +150,8 @@ function SortGraphics({
     window.addEventListener('resize', updateWidthAndHeight);
     return () => window.removeEventListener('resize', updateWidthAndHeight);
   });
+
+  // Scrambles the elements
   useEffect(() => {
     stopAnimation(animationTimeouts);
     setSortElems(genArr(numElems, theme));
@@ -143,8 +165,8 @@ function SortGraphics({
     setContainerDim([parentWidth, parentHeight]);
   }, [parentRef, windowWidth]);
 
+  // React spring stuff
   const items = sortElems.map((child, i) => {
-    // console.log(child, i);
     const height = (child.value / numElems) * contHeight;
     const background = child.color;
     const x = width * i;
@@ -159,9 +181,8 @@ function SortGraphics({
     config: { mass: 1, tension: 500, friction: 50 },
   });
 
-  // Todo: implement bubble and insertion sorts with generic animation
   const handleStartSort = () => {
-    // stopAnimation(animationTimeouts);
+    // runs various sort algos and generates animation steps to show
     let animations;
     switch (algo.key) {
       case 'bubble':
@@ -182,11 +203,9 @@ function SortGraphics({
     }
     setAniSteps([...animations]);
     const timeouts = genericArrAnimate(animations, setSortElems, setCurrStep, setSortStep, speed);
-    // console.log(animations);
     setAnimationTimeouts(timeouts);
   };
-  // const lastX = transitions[1].props.x.lastPosition;
-  // console.log(lastX);
+
   function renderDivs() {
     return transitions.map(({ item, props: { x, ...rest }, key }) => (
       <a.div
@@ -211,8 +230,29 @@ function SortGraphics({
   );
 }
 
-SortGraphics.propTypes = {};
+SortGraphics.propTypes = {
+  numElems: PropTypes.number.isRequired,
+  scramble: PropTypes.bool,
+  speed: PropTypes.number.isRequired,
+  algo: PropTypes.shape({
+    key: PropTypes.string,
+    title: PropTypes.string,
+  }),
+  sortState: PropTypes.number,
+  desiredStep: PropTypes.number,
+  currStep: PropTypes.number,
+  setCurrStep: PropTypes.func.isRequired,
+  setStepLimit: PropTypes.func.isRequired,
+  setSortStep: PropTypes.func.isRequired,
+  onStop: PropTypes.func.isRequired,
+};
 
-SortGraphics.defaultProps = {};
+SortGraphics.defaultProps = {
+  scramble: false,
+  algo: null,
+  sortState: 0,
+  desiredStep: 0,
+  currStep: 0,
+};
 
 export default SortGraphics;
