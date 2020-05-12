@@ -36,6 +36,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     width: '100%',
   },
+  Drawer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  author: {
+    display: 'flex',
+  },
 }));
 
 function Header({ onThemeToggle, onAlgoSelect, Algorithms }) {
@@ -65,7 +73,12 @@ function Header({ onThemeToggle, onAlgoSelect, Algorithms }) {
           <MenuIcon fontSize="large" />
         </IconButton>
         {/* there is a warning that will pop up when using drawing about findDOMnode */}
-        <Drawer anchor="left" open={drawerState} onClose={toggleDrawer(false)}>
+        <Drawer
+          anchor="left"
+          open={drawerState}
+          onClose={toggleDrawer(false)}
+          className={classes.Drawer}
+        >
           <List>
             {Algorithms.map((item) => (
               <ListItem

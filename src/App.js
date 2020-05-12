@@ -1,10 +1,35 @@
 import React, { Fragment, useState } from 'react';
-import { CssBaseline, ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
+import {
+  CssBaseline,
+  ThemeProvider,
+  createMuiTheme,
+  responsiveFontSizes,
+  Typography,
+  makeStyles,
+} from '@material-ui/core';
 import { deepOrange, cyan } from '@material-ui/core/colors';
 import { algos as Algorithms } from './data.json';
 import { Header, SortViewer } from './Components';
 
+const useStyles = makeStyles((theme) => ({
+  main: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  author: {
+    textAlign: 'center',
+    paddingBottom: '1em',
+  },
+  '@global': {
+    'html, body, #root': {
+      height: '100%',
+    },
+  },
+}));
+
 function App() {
+  const classes = useStyles();
   // Dark mode toggle
   const [darkMode, setDarkMode] = useState('dark');
   // Variable for which sort algo to use
@@ -37,7 +62,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Fragment>
+      <div className={classes.main}>
         {/* sets some default styling and paddings */}
         <CssBaseline />
         <Header
@@ -47,7 +72,10 @@ function App() {
           onAlgoSelect={handleAlgorithmSelect}
         />
         <SortViewer algo={algo} Algorithms={Algorithms} />
-      </Fragment>
+        <Typography variant="h6" className={classes.author}>
+          Created by Kevin Chang
+        </Typography>
+      </div>
     </ThemeProvider>
   );
 }
