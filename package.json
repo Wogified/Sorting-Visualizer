@@ -1,6 +1,6 @@
 {
   "name": "sort_viz_app",
-  "homepage": "https://wogified.github.io/sort_viz_app/",
+  "homepage": "https://wogified.github.io/Sorting-Visualizer/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
