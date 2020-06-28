@@ -178,7 +178,7 @@ function SortGraphics({
     enter: ({ x, width, height }) => ({ x, width, height, opacity: 1 }),
     update: ({ x, width, height }) => ({ x, width, height }),
     leave: { height: 0, opacity: 0 },
-    config: { mass: 1, tension: 500, friction: 50 },
+    config: { mass: 1, tension: 500 - (4 - speed) * 60, friction: 50 },
   });
 
   const handleStartSort = () => {

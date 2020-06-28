@@ -25,12 +25,12 @@ function mergeSort(arr, speed) {
     // highlight diff colors for current values of interest
 
     // AniStep: Highlight target arrays to be sorted
-    arrStart = setArrColor(arrStart, myOrange);
-    if (speed < 3) arrMid = setArrColor(arrMid, myGreen);
-    else arrMid = setArrColor(arrMid, myOrange);
-    a = setArrColor(a, myTeal);
-    b = setArrColor(b, myPurple);
-    arrEnd = setArrColor(arrEnd, myOrange);
+    setArrColor(arrStart, myOrange);
+    if (speed < 3) setArrColor(arrMid, myGreen);
+    else setArrColor(arrMid, myOrange);
+    setArrColor(a, myTeal);
+    setArrColor(b, myPurple);
+    setArrColor(arrEnd, myOrange);
     aStp.array = arrStart.concat(arrMid, a, b, arrEnd);
     aStp.count();
     aStp.level = 5;
@@ -41,7 +41,7 @@ function mergeSort(arr, speed) {
       let smallest;
       let change = false;
       if (speed < 3) {
-        arrMid = setArrColor(arrMid, myGreen);
+        setArrColor(arrMid, myGreen);
         if (a.length) a[0].color = myBlue;
         if (b.length) b[0].color = myBlue;
         aStp.array = arrStart.concat(arrMid, a, b, arrEnd);
@@ -79,7 +79,7 @@ function mergeSort(arr, speed) {
     // set final sorted portion of the array to be green
 
     if (speed < 3) {
-      arrMid = setArrColor(arrMid, myGreen);
+      setArrColor(arrMid, myGreen);
       aStp.array = arrStart.concat(arrMid, arrEnd);
       aStp.level = 5;
 
